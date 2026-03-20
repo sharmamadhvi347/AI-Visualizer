@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Toy Problem Visualizer</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Background Elements -->
+    <div class="ambient-particles" id="ambient-particles"></div>
+
+    <!-- PAGE 1: Landing -->
+    <main id="page-landing" class="page active">
+        <div class="landing-background">
+            <div class="parallax-river"></div>
+        </div>
+        
+        <div class="grain-overlay"></div> <!-- Kept grain overlay only in landing/light pages context -->
+        
+        <div class="landing-content">
+            <header class="hero-header">
+                <h1 class="editorial-headline">AI Toy Problem Visualizer</h1>
+            </header>
+
+            <div class="cards-container">
+                <!-- Card 1: M & C -->
+                <div class="topic-card" data-target="page-mc" id="card-mc">
+                    <div class="card-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 28C10 28 14 34 24 34C34 34 38 28 44 28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M10 24L14 30H34L38 24H10Z" fill="currentColor" opacity="0.8"/>
+                            <path d="M24 6V20M24 6L32 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2>Missionaries & Cannibals</h2>
+                    <div class="tags">
+                        <span class="tag">BFS Search</span>
+                        <span class="tag">State Space</span>
+                        <span class="tag">Toy Problem</span>
+                    </div>
+                    <p>Cross 3 missionaries & 3 cannibals safely — without outnumbering on either bank</p>
+                </div>
+
+                <!-- Card 2: TSP -->
+                <div class="topic-card" data-target="page-tsp" id="card-tsp">
+                    <div class="card-icon">
+                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="14" r="4" fill="currentColor"/>
+                            <circle cx="36" cy="18" r="4" fill="currentColor"/>
+                            <circle cx="24" cy="36" r="4" fill="currentColor"/>
+                            <path d="M15 15L33 17" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                            <path d="M34 21L26 33" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                            <path d="M14 17L22 33" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                        </svg>
+                    </div>
+                    <h2>Travelling Salesman Problem</h2>
+                    <div class="tags">
+                        <span class="tag">Greedy</span>
+                        <span class="tag">Nearest Neighbor</span>
+                        <span class="tag">Real World Problem</span>
+                    </div>
+                    <p>Find the shortest route visiting all cities exactly once — a real-world optimization classic</p>
+                </div>
+            </div>
+
+            
+        </div>
+    </main>
+
+    <!-- PAGE 2: Missionaries & Cannibals -->
+    <main id="page-mc" class="page">
+        <div class="grain-overlay"></div>
+        <button class="back-button pill-btn" data-target="page-landing">
+            ← <span style="margin-left:8px;">Back</span>
+        </button>
+        
+        <div class="visualizer-layout">
+            <!-- Left: Scene -->
+            <div class="scene-container">
+                <div class="mc-scene" id="mc-scene">
+                    <div class="bank left-bank" id="left-bank"></div>
+                    <div class="river">
+                        <div class="boat" id="boat">
+                            <!-- SVG Boat -->
+                            <svg class="boat-svg" width="120" height="40" viewBox="0 0 120 40">
+                                <path d="M10 20L30 35H90L110 20H10Z" fill="#8C7B6B"/>
+                                <path class="flag" d="M60 5V20M60 5L80 12L60 18" stroke="#D4622A" stroke-width="2" fill="none"/>
+                            </svg>
+                            <div class="boat-seats" id="boat-seats"></div>
+                        </div>
+                    </div>
+                    <div class="bank right-bank" id="right-bank"></div>
+                </div>
+                
+                <div class="timeline-strip" id="mc-timeline">
+                    <!-- Move history pills go here -->
+                </div>
+                
+                <div class="educational-panel">
+                    <h3 class="edu-title">How it works</h3>
+                    <p><strong>State Space Search:</strong> The problem is modeled as a graph where each node is a state (M_left, C_left, Boat_pos). <strong>BFS (Breadth-First Search)</strong> explores all valid moves layer by layer, ensuring we find the shortest safe path, which optimally takes 11 moves. A state is invalid if Cannibals outnumber Missionaries on either bank (unless M=0).</p>
+                </div>
+            </div>
+
+            <!-- Right: Controls -->
+            <div class="controls-sidebar">
+                <div class="stats-bar">
+                    <div class="stat-chip"><span class="label">Moves</span><span class="value jetbrains" id="mc-moves">0</span></div>
+                    <div class="stat-chip"><span class="label">Left</span><span class="value jetbrains" id="mc-left-state">3M, 3C</span></div>
+                    <div class="stat-chip"><span class="label">Boat</span><span class="value jetbrains" id="mc-boat-state">0M, 0C</span></div>
+                    <div class="stat-chip"><span class="label">Right</span><span class="value jetbrains" id="mc-right-state">0M, 0C</span></div>
+                </div>
+
+                <div class="control-section manual-play">
+                    <h3>Manual Play</h3>
+                    <div class="passenger-selectors">
+                        <div class="selector-group">
+                            <label>Missionaries</label>
+                            <div class="pill-group" id="select-m">
+                                <button class="pill active" data-val="0">0</button>
+                                <button class="pill" data-val="1">1</button>
+                                <button class="pill" data-val="2">2</button>
+                            </div>
+                        </div>
+                        <div class="selector-group">
+                            <label>Cannibals</label>
+                            <div class="pill-group" id="select-c">
+                                <button class="pill active" data-val="0">0</button>
+                                <button class="pill" data-val="1">1</button>
+                                <button class="pill" data-val="2">2</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="action-btn primary" id="btn-cross">Cross River ⛵</button>
+                </div>
+
+                <div class="control-section ai-agent">
+                    <h3>AI Agent</h3>
+                    <div class="agent-type-selector" style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">
+                        <span class="agent-type">Simple Reflex</span> → 
+                        <span class="agent-type">Model-Based</span> → 
+                        <strong class="agent-type active" style="color:var(--text-primary);">Goal-Based (BFS)</strong>
+                    </div>
+                    <div class="slider-group">
+                        <label>Animation Speed</label>
+                        <input type="range" id="mc-speed" min="1" max="3" value="2" class="custom-slider">
+                        <div class="slider-labels"><span>Slow</span><span>Med</span><span>Fast</span></div>
+                    </div>
+                    <div class="button-row">
+                        <button class="action-btn secondary" id="btn-step-bfs">⏭ Step Through</button>
+                        <button class="action-btn primary" id="btn-auto-solve">🤖 Auto Solve</button>
+                    </div>
+                </div>
+
+                <div class="terminal-panel">
+                    <div class="terminal-header">Agent Reasoning Log</div>
+                    <div class="terminal-body jetbrains" id="mc-terminal">
+                        <!-- Logs inject here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE 3: Travelling Salesman -->
+    <main id="page-tsp" class="page dark-mode">
+        <!-- TSP gets its own grain effect suitable for dark background inside CSS -->
+        <button class="back-button pill-btn" data-target="page-landing">
+            ← <span style="margin-left:8px;">Back</span>
+        </button>
+
+        <div class="visualizer-layout tsp-layout">
+            <!-- Left/Center: Canvas -->
+            <div class="canvas-container" style="position: relative;">
+                <canvas id="tsp-canvas"></canvas>
+                <div class="canvas-instruction">Click anywhere to add a city</div>
+                <div class="shimmer-overlay" id="tsp-shimmer"></div>
+                
+                <div class="educational-panel dark-edu">
+                    <h3 class="edu-title" style="color:#FDFAF6;">How it works</h3>
+                    <p style="color:#A4998E; font-size:1rem;"><strong>Nearest Neighbor (Greedy):</strong> A heuristic algorithm that starts at a random city and repeatedly visits the nearest unvisited city. It's fast (O(N²)) but doesn't guarantee the absolute shortest route.<br><br><strong>2-Opt Optimization:</strong> An iterative improvement technique that untangles crossed paths by swapping two edges if the swap reduces the total distance, fine-tuning the greedy result.</p>
+                </div>
+            </div>
+
+            <!-- Right: Controls -->
+            <div class="controls-sidebar dark-sidebar">
+                <div class="stats-bar horizontal">
+                    <div class="stat-chip"><span class="label">Distance</span><span class="value jetbrains highlight-amber" id="tsp-distance">0px</span></div>
+                    <div class="stat-chip"><span class="label">Cities</span><span class="value jetbrains" id="tsp-cities-count">0</span></div>
+                    <div class="stat-chip"><span class="label">Steps</span><span class="value jetbrains" id="tsp-steps">0</span></div>
+                </div>
+
+                <div class="control-section">
+                    <h3>Map Setup</h3>
+                    <div class="button-row">
+                        <button class="action-btn secondary" id="btn-add-random">Add Random Cities</button>
+                        <button class="action-btn outline" id="btn-clear-canvas">Clear Canvas</button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>Algorithms</h3>
+                    <div class="slider-group">
+                        <label>Animation Speed</label>
+                        <input type="range" id="tsp-speed" min="1" max="3" value="2" class="custom-slider">
+                        <div class="slider-labels"><span>Slow</span><span>Med</span><span>Fast</span></div>
+                    </div>
+                    <button class="action-btn primary" id="btn-solve-tsp" style="margin-bottom: 12px;">▶ Solve — Nearest Neighbor</button>
+                    <button class="action-btn accent-teal" id="btn-optimize-tsp" disabled>⚡ Optimize (2-Opt)</button>
+                    
+                    <div class="compare-toggle" id="compare-toggle-container" style="display:none; margin-top:20px;">
+                        <label class="switch-label">
+                            <input type="checkbox" id="toggle-compare">
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Show Greedy overlay</span>
+                    </div>
+                </div>
+
+                <div class="terminal-panel">
+                    <div class="terminal-header">Algorithm Log</div>
+                    <div class="terminal-body jetbrains" id="tsp-terminal">
+                        <div class="log-entry">Waiting for cities...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="victory-banner" id="victory-banner">
+        <h2>🎉 Puzzle Solved!</h2>
+    </div>
+    
+    <div class="defeat-banner" id="defeat-banner">
+        <h2>💀 Cannibals took over!</h2>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

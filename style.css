@@ -161,10 +161,10 @@ html, body {
 .left-bank { left: 0; border-radius: 0 40px 0 0; }
 .right-bank { right: 0; border-radius: 40px 0 0 0; }
 .river { position: absolute; bottom: 0; left: 30%; width: 40%; height: 60px; background: linear-gradient(180deg, #91C5E3 0%, #7DB5D4 100%); overflow: visible; }
-.river::before { content: ''; position: absolute; top: -10px; left: -50%; width: 200%; height: 20px; background: radial-gradient(circle at 10px 10px, transparent 10px, #91C5E3 11px); background-size: 40px 20px; animation: wave 2s linear infinite; }
+.river::before { content: ''; position: absolute; top: -10px; left: -5%; width: 200%; height: 20px; background: radial-gradient(circle at 10px 10px, transparent 10px, #91C5E3 11px); background-size: 40px 20px; animation: wave 2s linear infinite; }
 @keyframes wave { 100% { transform: translateX(40px); } }
 
-.boat { position: absolute; bottom: 15px; left: 0; width: 120px; height: 50px; display: flex; justify-content: center; align-items: flex-end; transition: transform 1.2s cubic-bezier(0.45, 0, 0.15, 1); transform: translateX(0); }
+.boat { position: absolute; bottom: 75px; left: 0; width: 120px; height: 50px; display: flex; justify-content: center; align-items: flex-end; transition: transform 1.2s cubic-bezier(0.45, 0, 0.15, 1); transform: translateX(0); }
 .boat-svg { position: absolute; bottom: -10px; }
 .boat-seats { position: relative; z-index: 2; display: flex; gap: 5px; margin-bottom: 25px; }
 

@@ -336,29 +336,44 @@ class MCVisualizer {
     }
 
     playNextBFS() {
-        if(this.bfsIndex >= this.bfsPath.length) return;
-        const curr = this.bfsPath[this.bfsIndex - 1]; const next = this.bfsPath[this.bfsIndex];
-        let m = Math.abs(curr.ml - next.ml); let c = Math.abs(curr.cl - next.cl);
-        
-        this.bfsIndex++;
-        this.log(`[BFS] Executed Step ${this.bfsIndex - 1}: Move ${m}M, ${c}C`);
-        
-        let targetState = {...this.state};
-        if(this.state.b === 0) {
-            targetState.ml -= m; targetState.cl -= c; targetState.mr += m; targetState.cr += c; targetState.b = 1;
-        } else {
-            targetState.mr -= m; targetState.cr -= c; targetState.ml += m; targetState.cl += c; targetState.b = 0;
-        }
-        
-        this.animateCross(m, c, targetState);
-        
-        if(this.dom.btnSolve.disabled && this.bfsIndex < this.bfsPath.length) {
-            const speedMultiplier = [2, 1.2, 0.6][this.dom.speed.value - 1];
-            setTimeout(() => { if(this.dom.btnSolve.disabled) this.playNextBFS(); }, speedMultiplier * 1000 + 400);
-        } else if (this.bfsIndex >= this.bfsPath.length) {
-            this.dom.btnSolve.disabled = false; this.dom.btnCross.disabled = false; this.dom.btnStep.disabled = false;
-        }
+    if (this.bfsIndex >= this.bfsPath.length) {
+        this.dom.btnSolve.disabled = false;
+        this.dom.btnCross.disabled = false;
+        this.dom.btnStep.disabled = false;
+        return;
     }
+
+    const prev = this.bfsPath[this.bfsIndex - 1];
+    const next = this.bfsPath[this.bfsIndex];
+
+    // Derive move directly from BFS path states
+    let m, c;
+    if (prev.b === 0) {
+        // boat was on left, moving right
+        m = prev.ml - next.ml;
+        c = prev.cl - next.cl;
+    } else {
+        // boat was on right, moving left
+        m = prev.mr - next.mr;
+        c = prev.cr - next.cr;
+    }
+
+    this.bfsIndex++;
+    this.log(`[BFS] Step ${this.bfsIndex - 1}: Moving ${m}M, ${c}C from ${prev.b === 0 ? 'left' : 'right'} → State: (${next.ml}M,${next.cl}C | ${next.mr}M,${next.cr}C)`);
+
+    this.animateCross(m, c, next);
+
+    if (this.dom.btnSolve.disabled && this.bfsIndex < this.bfsPath.length) {
+        const speedMultiplier = [2, 1.2, 0.6][this.dom.speed.value - 1];
+        setTimeout(() => {
+            if (this.dom.btnSolve.disabled) this.playNextBFS();
+        }, speedMultiplier * 1000 + 400);
+    } else if (this.bfsIndex >= this.bfsPath.length) {
+        this.dom.btnSolve.disabled = false;
+        this.dom.btnCross.disabled = false;
+        this.dom.btnStep.disabled = false;
+    }
+}
 
     runBFS() {
         let start = {ml:3, cl:3, mr:0, cr:0, b:0};
